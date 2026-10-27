@@ -1,0 +1,24 @@
+# AMP (CubeCoders Application Management Panel) integration: one entry per AMP controller.
+# Shows each game-server instance (running or not, players, CPU, memory) and starts or stops it.
+# Add a panel from its dashboard page: its IP (http and port 8080 assumed), an AMP user and password.
+name: amp
+kind: integration
+secret_rotate: AMP panel > Configuration > User Management
+title: AMP game servers
+description: Your AMP game-server panels and their instances, with start and stop.
+version: 0.1.1
+you_need:
+  - "An AMP (CubeCoders Application Management Panel) controller you can reach from the Core machine"
+  - "An AMP user name and password for it"
+provider: provider.py
+entry_label: AMP panel
+entry_schema:
+  url: str                 # IP or name (http, port 8080 assumed), or the full URL
+  user: str
+  password: password
+  note: "str?"
+entry_form:
+  url: "IP address (or full URL if AMP is behind https or another port)"
+  user: "AMP user name"
+  password: "Password (paste it, or its secret's name in Bitwarden)"
+  note: "Note"

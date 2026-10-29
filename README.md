@@ -10,7 +10,7 @@ buttons. Hisho logs in to each panel once and reuses the session.
 
 - You need:
   - An AMP (CubeCoders Application Management Panel) controller you can reach from the Core machine
-  - An AMP user name and password for it
+  - An AMP user for Hisho alone (no two-factor sign-in) whose role can only start and stop instances, and its password
 - Runs on: the Core machine, inside Hisho Core
 - One entry per AMP panel, each with:
   - `url` (str, required)
@@ -35,8 +35,15 @@ Its card on the overview lists each panel's game servers, running or stopped, wi
 
 ## Settings
 
+Its page lists the AMP panels it finds on your network (port 8080 showing AMP's sign-in page); **Use this**
+fills in the address. AMP's API has no tokens, so Hisho keeps a login: make a user for Hisho alone. In the
+AMP panel, **Configuration > Role Management**: a role (e.g. Hisho) with only Instance Management's **Start
+Instance** and **Stop Instance** allowed, and the game servers it may see under **All Instances**; then
+**Configuration > User Management**: a user (e.g. hisho) with that role, its own long password and no
+two-factor sign-in ([AMP's guide to users and roles](https://discourse.cubecoders.com/t/managing-user-permissions-in-amp/2301)).
+
 Add a panel on its page (**Add-ons > AMP game servers > + add**): its IP address (http and port
-8080 assumed, or a full URL), an AMP user name and its password. A typed password is kept only on
+8080 assumed, or a full URL), that AMP user name and its password. A typed password is kept only on
 the Core machine (`~/.hisho-secrets.env`); you can give a secret's name instead. Entries are kept
 in `~/Hisho/System/Config/Addons/amp.yaml`. To change the password: AMP panel > Configuration >
 User Management.

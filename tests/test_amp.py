@@ -64,3 +64,19 @@ def test_the_amp_integration_lists_instances_logs_in_once_and_starts_one(fleet, 
     assert calls[-1][0].endswith("/API/ADSModule/StartInstance") and calls[-1][1]["InstanceName"] == "Valheim01"
     assert sum(1 for c in calls if c[0].endswith("/Login")) == 1  # one session reused
     assert addons.act(amp, "games", "Nope", "start", ctx)["ok"] is False
+
+
+def test_find_it_looks_for_amps_sign_in_page_and_fills_the_address(addon):
+    from hisho import connect
+    [probe] = addon.manifest["discover"]
+    assert probe["http"] == "http://{ip}:8080/"
+    page = "<html><head><title>AMP - Application Management Panel</title></head><body></body></html>"
+    seen = []
+    tcp = lambda ip, port, banner="": seen.append((ip, port)) or ip == "192.0.2.30"
+    http = lambda url, match: url == "http://192.0.2.30:8080/" and __import__("re").search(match, page, __import__("re").I)
+    got = connect.scan(addon, ["192.0.2.28/30"], tcp=tcp, http=http, rmcp=lambda ip, port: False, workers=2)
+    assert got == [{"ip": "192.0.2.30", "title": "AMP panel at 192.0.2.30", "fill": {"url": "192.0.2.30"}}]
+    assert {p for _, p in seen} == {8080}
+    assert addons.provider(addon).panel_url(got[0]["fill"]["url"]) == "http://192.0.2.30:8080"
+    assert addons.validate_manifest(addon.manifest) == []
+    assert "connect" not in addon.manifest          # AMP has no tokens: no sign-in-once, a user of its own

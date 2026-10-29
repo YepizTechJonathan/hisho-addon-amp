@@ -1,15 +1,17 @@
 # AMP (CubeCoders Application Management Panel) integration: one entry per AMP controller.
 # Shows each game-server instance (running or not, players, CPU, memory) and starts or stops it.
-# Add a panel from its dashboard page: its IP (http and port 8080 assumed), an AMP user and password.
+# Add a panel from its dashboard page: its IP (http and port 8080 assumed), an AMP user and password. The page lists
+# AMP panels it finds on your network (port 8080, AMP's sign-in page). AMP's API has no tokens, so Hisho keeps
+# the login of a user made for it alone, with a role that can only start and stop instances.
 name: amp
 kind: integration
 secret_rotate: AMP panel > Configuration > User Management
 title: AMP game servers
 description: Your AMP game-server panels and their instances, with start and stop.
-version: 0.1.2
+version: 0.2.0
 you_need:
   - "An AMP (CubeCoders Application Management Panel) controller you can reach from the Core machine"
-  - "An AMP user name and password for it"
+  - "An AMP user for Hisho alone (no two-factor sign-in) whose role can only start and stop instances, and its password"
 provider: provider.py
 entry_label: AMP panel
 entry_schema:
@@ -22,21 +24,24 @@ entry_form:
   user: "AMP user name"
   password: "Password (paste it, or its secret's name in Bitwarden)"
   note: "Note"
+discover:
+  - {http: "http://{ip}:8080/", match: "AMP - Application Management Panel", title: "AMP panel at {ip}",
+     fill: {url: "{ip}"}}
 help:
   url:
     label: AMP panel address
-    say: "The address you open the AMP panel at, like 192.0.2.30. Just the IP is enough: Hisho assumes http and port 8080. Type the full address if AMP is behind https or another port."
+    say: "The address you open the AMP panel at, like 192.0.2.30. Just the IP is enough: Hisho assumes http and port 8080. Type the full address if AMP is behind https or another port. A panel Hisho found on your network is filled in by Use this."
     get: "https://github.com/CubeCoders/AMP/wiki/Diagnosing-Connectivity-Issues"
     get_label: If the panel can't be reached
   user:
     label: AMP user name
-    say: "A user that can sign in to the panel and start and stop your game servers. A user of its own for Hisho is safest: make it in AMP under Configuration > User Management."
-    get: "https://github.com/CubeCoders/AMP/wiki/Managing-user-permissions-in-AMP"
-    get_label: How AMP users and permissions work
+    say: "AMP has no API keys, so Hisho keeps a login: make one for Hisho alone. In the AMP panel, Configuration > Role Management: a new role (e.g. Hisho) with only Instance Management's Start Instance and Stop Instance turned on (green) and the game servers it may see under All Instances. Then Configuration > User Management: a new user (e.g. hisho) with that role, a long password of its own and no two-factor sign-in. Hisho only lists your game servers and starts or stops them."
+    get: "https://discourse.cubecoders.com/t/managing-user-permissions-in-amp/2301"
+    get_label: How AMP users and roles work
   password:
     label: AMP password
-    say: "That user's password. Change it in AMP under Configuration > User Management."
-    get: "https://github.com/CubeCoders/AMP/wiki/Managing-user-permissions-in-AMP"
-    get_label: How AMP users and permissions work
+    say: "That user's password (not your own admin password). Hisho keeps it only on the Core machine. Change it in AMP under Configuration > User Management, then type the new one here."
+    get: "https://discourse.cubecoders.com/t/managing-user-permissions-in-amp/2301"
+    get_label: How AMP users and roles work
   note:
     say: "Anything you want to remember about this panel, like which games it runs."

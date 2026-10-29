@@ -6,7 +6,7 @@ kind: integration
 secret_rotate: AMP panel > Configuration > User Management
 title: AMP game servers
 description: Your AMP game-server panels and their instances, with start and stop.
-version: 0.1.1
+version: 0.1.2
 you_need:
   - "An AMP (CubeCoders Application Management Panel) controller you can reach from the Core machine"
   - "An AMP user name and password for it"
@@ -22,3 +22,21 @@ entry_form:
   user: "AMP user name"
   password: "Password (paste it, or its secret's name in Bitwarden)"
   note: "Note"
+help:
+  url:
+    label: AMP panel address
+    say: "The address you open the AMP panel at, like 192.0.2.30. Just the IP is enough: Hisho assumes http and port 8080. Type the full address if AMP is behind https or another port."
+    get: "https://github.com/CubeCoders/AMP/wiki/Diagnosing-Connectivity-Issues"
+    get_label: If the panel can't be reached
+  user:
+    label: AMP user name
+    say: "A user that can sign in to the panel and start and stop your game servers. A user of its own for Hisho is safest: make it in AMP under Configuration > User Management."
+    get: "https://github.com/CubeCoders/AMP/wiki/Managing-user-permissions-in-AMP"
+    get_label: How AMP users and permissions work
+  password:
+    label: AMP password
+    say: "That user's password. Change it in AMP under Configuration > User Management."
+    get: "https://github.com/CubeCoders/AMP/wiki/Managing-user-permissions-in-AMP"
+    get_label: How AMP users and permissions work
+  note:
+    say: "Anything you want to remember about this panel, like which games it runs."
